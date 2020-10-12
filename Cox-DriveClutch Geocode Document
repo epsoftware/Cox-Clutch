@@ -1,0 +1,289 @@
+const express = require("express")
+const app = express()
+
+const NodeGeocoder = require('node-geocoder');
+
+// const { geocode } = NodeGeocoder({
+//     provider: 'google',
+//     key: 'YAIzaSyC-g7k8r6MOsqQctOXAN8SJuNlxyTetU7c'
+// });
+
+
+const options = {
+    provider: 'google',
+    apiKey: 'AIzaSyC-g7k8r6MOsqQctOXAN8SJuNlxyTetU7c' 
+};
+
+const geocoder = NodeGeocoder(options);
+
+// Using callback
+
+// geo.find('2975 Bancroft Glen NW, Kennesaw', function (err, res) {
+
+//     console.log(JSON.stringify(location));
+
+// });
+
+// (async () => {
+//     const location = await geocoder.geocode('2975');
+//     console.log(location);
+//     console.log(location.body.country);
+// })();
+
+
+// Geocoder GOOD!
+// geocoder.geocode('2975 Bancroft Glen NW, Kennesaw')
+//     .then((res) => {
+//         const obj = JSON.parse(JSON.stringify(res));
+//      //   var address = res;
+//      //   var add = 
+//         console.log(obj[0].administrativeLevels.level1long);
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     });
+
+
+// bueno
+// (async () => {
+//     const location = await geocoder.geocode('2975 Bancroft'); 
+//    // console.log(location);
+//     // var recv = JSON.parse(location);
+//     // var mm = obj.latitud;
+//     // console.log(mm);
+//   //  console.log(JSON.stringify(location.latitud));
+//     const data = JSON.parse(location);
+//   //  const data1 = JSON.parse(JSON.stringify(data.latitud));
+// //    console.log(data1);
+//     // const data = JSON.parse(location.body);
+//     // console.log(data.latitude);
+// })();
+
+
+
+
+
+
+//const { Client } = require("node-postgres");
+// (async () => {
+//     const client = new Client({
+//         user: 'postgres',
+//         host: '127.0.0.1',
+//         database: 'pbi_data',
+//         password: 'batman00',
+//         port: 5432
+//     });
+
+//     await client.connect();
+
+//     const res = await client.query('SELECT * FROM public.scopes_contractors');
+//     console.log(res);
+//     await client.end();
+// })().catch(console.error);
+
+// =========================================================================
+const { Pool, Client } = require("pg")
+// =========================================================================
+const pool = new Pool({
+    user: 'postgres',
+    host: '127.0.0.1',
+    database: 'pbi_data',
+    password: 'batman00',
+    port: 5432,
+});
+
+// pool.query('SELECT NOW()', (err, res) => {
+//     console.log(err, res)
+//     pool.end()
+//})
+
+
+const client = new Client({
+        user: 'postgres',
+        host: 'localhost',
+        database: 'pbi_data',
+        password: 'batman00',
+        port: 5432
+});
+
+client
+    .connect()
+    .then(() => console.log('Server connection is completed and ready for Postman!'))
+    .catch(err => console.error('connection error', err.stack))
+
+// client
+//     .query("SELECT 1")
+//     .then(result => console.log(result))
+//     .catch(e => console.error(e.stack))
+//     .then(() => client.end())
+
+
+//const connStringPostgres = '127.0.0.1://postgres:batman00@localhost:5432/pbi_data';
+
+//const client = new Client({ connStringPostgres: connStringPostgres });
+
+
+// const sql = "SELECT 1";
+// client.query(sql).then(res => {
+//     const data = res.rows;
+//     data.forEach(row => console.log(row));
+// });
+
+
+// const client = new Client()
+// client.connect()
+//  const res = await client.query('SELECT NOW()')
+//  await client.end()
+
+// client
+//     .query('SELECT * FROM public.scopes_contractors')
+//     .then(res => console.log(res.rows[0]))
+//     .catch(e => console.error(e.stack))
+
+// client.end()
+//client.connect()
+// client.query('SELECT NOW()', (err, res) => {
+//     console.log(err, res)
+//    client.end()
+//})
+
+// client.connect();
+// const resxx = client.query('SELECT now()');
+// console.log(resxx);
+// client.end;
+
+
+// const connStringPostgres = '127.0.0.1://postgres:batman00@localhost:5432/pbi_data'
+// // localhost" connectionString="Server=127.0.0.1;Port=5432;Database=pbi_data;User Id=postgres;Password=batman00;" />
+
+// const client = new Client({ connStringPostgres: connStringPostgres});
+
+// client.connect();
+
+
+app.listen(3000, () => {
+    console.log('Server is up on port 3000');
+})
+
+//var PORT = process.env.PORT || 3000;
+//app.listen(PORT, () => console.log(`Server Started on Port ${PORT}`));
+
+
+// Save values
+app.post('/save', (req, res) => {
+    //Testing TEXT
+    res.send('<h1>Saving data (POST)</h1>');
+ });
+
+ // Read values
+app.get('/display', (req, res) => {
+    //Testing TEXT
+    res.send('<h1>Read data (GET)</h1>');
+});
+
+// Read values
+// app.get('/readDB', function (req, res, next )  {
+//     //Testing TEXT
+//     client.query('SELECT * FROM public.scopes_contractors', [1], function (err, result) {
+//         if (err) {
+//             console.log(err);
+//             res.status(400).send(err);
+//         }
+//         res.status(200).send(result.rows);
+//     });
+// });
+
+// ============================================
+// Good
+// ============================================
+app.get('/readDB/', (req, res) => {
+    //Testing TEXT
+    const _address = req.query.Address;
+    console.log(_address);
+    geocoder.geocode(_address)
+    .then((res) => {
+    // x    const obj = JSON.parse(JSON.stringify(res));
+    // x    console.log(obj[0].administrativeLevels.level1long);
+    // x    const _state = obj[0].administrativeLevels.level1long;
+        // Get State from Database
+        //const _query = 'SELECT stusps FROM cb_2018_us_state_20m WHERE name = ' + "'" + _state + "'";
+        const _query = 'SELECT stusps FROM cb_2018_us_state_20m WHERE name = ' + "'" + 'Georgia' + "'"
+        client
+            .query(_query) 
+         //.query("SELECT * FROM public.scopes_contractors WHERE name = $1", [_state])
+         .then(result => {
+         //   res.send(result.rows[0]) })
+            console.log(result.rows[0]) 
+        //})
+    }).catch((err) => {
+        console.log(err);
+    })
+})
+
+
+
+
+
+//     client
+//         .query("SELECT * FROM public.scopes_contractors WHERE ID = $1", [_address])
+//         .then(result => {
+//            // console.log(res.rows[0])
+//            res.send(result.rows[0])
+//             // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+//         })
+//         .catch(e => console.error(e.stack))
+ 
+ //});
+
+
+// New
+// app.get('/readDB/:xx', (req, res) => {
+//     const { xx } = req.params;
+//     geocoder.geocode(xx)
+//         .then((res) => {
+//             const obj = JSON.parse(JSON.stringify(res));
+//             //   var address = res;
+//             var st = obj[0].administrativeLevels.level1long
+//             //console.log(obj[0].administrativeLevels.level1long);
+//             client
+//                 .query("SELECT * FROM public.scopes_contractors WHERE ID = $1", [st])
+//                 .then(result => {
+//                     // console.log(res.rows[0])
+//                     res.send(result.rows[0])
+//                     // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+//                 })
+//                 .catch(e => console.error(e.stack))
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         });
+// });
+
+
+
+app.get('/readParam/:xx', async (req, res) => {
+    //Testing TEXT
+  //  var xx = req.params.xx;
+    const { xx } = req.params;
+    const { res1 } = await client.query('SELECT * FROM public.scopes_contractors where id = $1', [xx]);
+    res.send(res1[0])
+
+    // client.query('SELECT * FROM public.scopes_contractors where id =' + xx , [1], function (err, result) {
+        if (err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+        res.status(200).send(result.res1);
+    // });
+});
+
+app.get('/', (req, res) => {
+//Testing TEXT
+  res.send('<h1>Testing (GET) en res.send</h1>');
+//Testing HTML
+   res.send('<h1>Testing (GET) en res.send !!</h1>');
+//Testing sending a file
+res.sendFile(path.join(__dirname, 'public', 'api.html')); // double undescore __dirname
+});
+
+// ===> End Sample #1
