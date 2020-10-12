@@ -9,7 +9,7 @@ const NodeGeocoder = require('node-geocoder');
 
 const options = {
     provider: 'google',
-    apiKey: 'AIzaSyC-g7k8r6MOsqQctOXAN8SJuNlxyTetU7c' 
+    apiKey: '' 
 };
 
 const geocoder = NodeGeocoder(options);
