@@ -1,0 +1,16 @@
+{
+  "name": "driveclutch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Edgar Pineda",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-geocoder": "^3.27.0",
+    "pg": "^8.4.0"
+  }
+}
